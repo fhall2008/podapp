@@ -1,0 +1,18 @@
+image: gitpod/workspace-full
+
+tasks:
+  - init: |
+      echo "Installing Android SDK command line tools..."
+      wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
+      mkdir -p $HOME/Android/cmdline-tools
+      unzip cmdline-tools.zip -d $HOME/Android/cmdline-tools
+      mv $HOME/Android/cmdline-tools/cmdline-tools $HOME/Android/cmdline-tools/latest
+
+      export ANDROID_SDK_ROOT=$HOME/Android
+      export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+      export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+
+      yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+      yes | sdkmanager --licenses
+
+  - command: ./gradlew assembleDebug
